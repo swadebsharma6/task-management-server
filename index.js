@@ -28,6 +28,19 @@ async function run() {
 
     await client.connect();
 
+    const userCollection = client.db("TaskManagementDB").collection('users');
+
+    app.post('/user', async(req, res)=>{
+        const user = req.body;
+        const result = await userCollection.insertOne(user);
+        res.send(result)
+    })
+
+    app.get('/user', async(req, res)=>{
+        const cursor = userCollection.find();
+        const result = await cursor.toArray();
+        res.send(result)
+    })
 
 
 
