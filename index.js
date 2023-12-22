@@ -28,20 +28,37 @@ async function run() {
 
     await client.connect();
 
-    const userCollection = client.db("TaskManagementDB").collection('users');
+    const userCollection = client.db("TaskManagementDB").collection("users");
+    const taskCollection = client.db("TaskManagementDB").collection("tasks");
 
-    app.post('/user', async(req, res)=>{
-        const user = req.body;
-        const result = await userCollection.insertOne(user);
+    // Users related Api
+    app.post('/users', async(req, res)=>{
+      const user = req.body;
+      const result = await userCollection.insertOne(user);
+      res.send(result)
+  })
+
+  app.get('/users', async(req, res)=>{
+      const cursor = userCollection.find();
+      const result = await cursor.toArray();
+      res.send(result)
+  })
+
+  // task related API
+    app.post('/task', async(req, res)=>{
+        const item = req.body;
+        const result = await taskCollection.insertOne(item);
         res.send(result)
     })
 
-    app.get('/user', async(req, res)=>{
-        const cursor = userCollection.find();
-        const result = await cursor.toArray();
-        res.send(result)
-    })
+    app.get('/task', async(req, res)=>{
+      const cursor = taskCollection.find();
+      const result = await cursor.toArray();
+      res.send(result)
+  })
 
+
+   
 
 
     // Send a ping to confirm a successful connection
@@ -49,7 +66,7 @@ async function run() {
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
-    await client.close();
+    // await client.close();
   }
 }
 run().catch(console.dir);
