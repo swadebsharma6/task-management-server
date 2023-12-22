@@ -30,6 +30,8 @@ async function run() {
 
     const userCollection = client.db("TaskManagementDB").collection("users");
     const taskCollection = client.db("TaskManagementDB").collection("tasks");
+    const completeTaskCollection = client.db("TaskManagementDB").collection("completes");
+    const ongoingTaskCollection = client.db("TaskManagementDB").collection("ongoing");
 
     // Users related Api
     app.post('/users', async(req, res)=>{
@@ -55,7 +57,32 @@ async function run() {
       const cursor = taskCollection.find();
       const result = await cursor.toArray();
       res.send(result)
-  })
+  });
+
+  // completeTask related Api
+  app.post('/complete', async(req, res)=>{
+    const item = req.body;
+    const result = await completeTaskCollection.insertOne(item);
+    res.send(result)
+})
+
+app.get('/complete', async(req, res)=>{
+  const cursor = completeTaskCollection.find();
+  const result = await cursor.toArray();
+  res.send(result)
+});
+  // OngoingTAsk related Api
+  app.post('/on-task', async(req, res)=>{
+    const item = req.body;
+    const result = await ongoingTaskCollection.insertOne(item);
+    res.send(result)
+})
+
+app.get('/on-task', async(req, res)=>{
+  const cursor = ongoingTaskCollection.find();
+  const result = await cursor.toArray();
+  res.send(result)
+});
 
 
    
